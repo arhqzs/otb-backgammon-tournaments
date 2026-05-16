@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OTB Backgammon Tournaments</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+        crossorigin="" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">⚀⚅</span>
+      <h1>OTB Backgammon Tournaments</h1>
+    </div>
+    <div class="topbar-actions">
+      <button id="near-me-btn" class="btn primary" title="Sort by distance from your location">
+        📍 Near me
+      </button>
+      <span id="geo-status" class="geo-status"></span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar">
+      <div class="filter-group">
+        <label for="search">Search</label>
+        <input type="text" id="search" placeholder="Tournament, city, country..." />
+      </div>
+
+      <div class="filter-group">
+        <label for="region">Region</label>
+        <select id="region">
+          <option value="">All regions</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="country">Country</label>
+        <select id="country">
+          <option value="">All countries</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="month">Month</label>
+        <select id="month">
+          <option value="">Any month</option>
+          <option value="1">January</option>
+          <option value="2">February</option>
+          <option value="3">March</option>
+          <option value="4">April</option>
+          <option value="5">May</option>
+          <option value="6">June</option>
+          <option value="7">July</option>
+          <option value="8">August</option>
+          <option value="9">September</option>
+          <option value="10">October</option>
+          <option value="11">November</option>
+          <option value="12">December</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="format">Format</label>
+        <select id="format">
+          <option value="">Any format</option>
+          <option value="Knockout">Knockout</option>
+          <option value="Swiss + Knockout">Swiss + Knockout</option>
+          <option value="Single Elimination">Single Elimination</option>
+          <option value="Single Elimination + Consolation">SE + Consolation</option>
+          <option value="Swiss">Swiss</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="prize-tier">Prize tier (USD)</label>
+        <select id="prize-tier">
+          <option value="">Any prize pool</option>
+          <option value="0">Up to $10k</option>
+          <option value="10000">$10k+</option>
+          <option value="25000">$25k+</option>
+          <option value="50000">$50k+</option>
+          <option value="100000">$100k+</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="fee-max">Max entry fee (USD)</label>
+        <input type="number" id="fee-max" min="0" step="50" placeholder="No limit" />
+      </div>
+
+      <div class="filter-group">
+        <label class="checkbox-row">
+          <input type="checkbox" id="upcoming-only" checked />
+          <span>Upcoming only</span>
+        </label>
+      </div>
+
+      <div class="filter-group">
+        <label for="sort">Sort by</label>
+        <select id="sort">
+          <option value="date">Date (soonest first)</option>
+          <option value="prize">Prize pool (largest first)</option>
+          <option value="fee">Entry fee (lowest first)</option>
+          <option value="distance" disabled>Distance (use Near me)</option>
+        </select>
+      </div>
+
+      <button id="reset-filters" class="btn ghost">Reset filters</button>
+
+      <div class="sidebar-footer">
+        <p class="disclaimer">
+          Data is curated from typical recurring events. <strong>Always verify dates, fees, and format on the official website before paying.</strong>
+        </p>
+      </div>
+    </aside>
+
+    <section class="content">
+      <div id="map"></div>
+
+      <div class="results-header">
+        <div>
+          <span id="result-count">0</span> tournaments
+          <span id="sort-label" class="sort-label"></span>
+        </div>
+      </div>
+
+      <div id="cards" class="cards"></div>
+    </section>
+  </main>
+
+  <div id="detail-overlay" class="overlay hidden" aria-hidden="true">
+    <div class="detail-panel" role="dialog" aria-modal="true" aria-labelledby="detail-title">
+      <button id="close-detail" class="close-btn" aria-label="Close">×</button>
+      <div id="detail-body"></div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+          crossorigin=""></script>
+  <script src="tournaments.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
