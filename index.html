@@ -119,16 +119,31 @@
     </aside>
 
     <section class="content">
-      <div id="map"></div>
+      <nav class="tabs" role="tablist">
+        <button class="tab active" data-tab="tournaments" role="tab" aria-selected="true">📅 Tournaments</button>
+        <button class="tab" data-tab="videos" role="tab" aria-selected="false">📺 Videos</button>
+      </nav>
 
-      <div class="results-header">
-        <div>
-          <span id="result-count">0</span> tournaments
-          <span id="sort-label" class="sort-label"></span>
+      <div id="tab-tournaments" class="tab-panel active">
+        <div id="map"></div>
+
+        <div class="results-header">
+          <div>
+            <span id="result-count">0</span> tournaments
+            <span id="sort-label" class="sort-label"></span>
+          </div>
         </div>
+
+        <div id="cards" class="cards"></div>
       </div>
 
-      <div id="cards" class="cards"></div>
+      <div id="tab-videos" class="tab-panel">
+        <div class="videos-intro">
+          <h2>Tournament videos</h2>
+          <p>YouTube searches for each tournament — surfaces whatever organizers uploaded that day (livestreams, feature matches, highlights).</p>
+        </div>
+        <div id="videos-container"></div>
+      </div>
     </section>
   </main>
 

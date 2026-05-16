@@ -20,6 +20,9 @@
     overlay: document.getElementById("detail-overlay"),
     detailBody: document.getElementById("detail-body"),
     closeDetail: document.getElementById("close-detail"),
+    tabs: document.querySelectorAll(".tab"),
+    tabPanels: document.querySelectorAll(".tab-panel"),
+    videosContainer: document.getElementById("videos-container"),
   };
 
   let userLocation = null;
@@ -355,6 +358,119 @@
     return escapeHtml(s);
   }
 
+  /* ---------- Videos tab ---------- */
+  function renderVideos() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const dayMs = 24 * 60 * 60 * 1000;
+
+    const buckets = { live: [], justEnded: [], comingUp: [], other: [] };
+
+    TOURNAMENTS.forEach(t => {
+      const start = new Date(t.startDate);
+      const end = new Date(t.endDate);
+      start.setHours(0, 0, 0, 0);
+      end.setHours(0, 0, 0, 0);
+
+      if (today >= start && today <= end) {
+        buckets.live.push(t);
+      } else if (today > end && (today - end) <= 14 * dayMs) {
+        buckets.justEnded.push(t);
+      } else if (today < start && (start - today) <= 14 * dayMs) {
+        buckets.comingUp.push(t);
+      } else if (today < start) {
+        buckets.other.push(t);
+      }
+    });
+
+    buckets.justEnded.sort((a, b) => new Date(b.endDate) - new Date(a.endDate));
+    buckets.comingUp.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+    buckets.other.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+
+    const sections = [
+      { key: "live", title: "Running today", badge: true, empty: "No tournaments are running today. Check the upcoming list below." },
+      { key: "justEnded", title: "Just ended (last 14 days)", empty: null },
+      { key: "comingUp", title: "Coming up (next 14 days)", empty: null },
+      { key: "other", title: "Later this year", empty: null },
+    ];
+
+    let html = "";
+    sections.forEach(sec => {
+      const list = buckets[sec.key];
+      if (list.length === 0 && !sec.empty) return;
+      html += `
+        <div class="video-section">
+          <div class="video-section-header">
+            <h3>${escapeHtml(sec.title)}</h3>
+            ${sec.badge && list.length > 0 ? '<span class="badge-live">Live</span>' : ""}
+            <span class="count">${list.length} tournament${list.length === 1 ? "" : "s"}</span>
+          </div>
+          ${list.length === 0
+            ? `<div class="video-empty">${escapeHtml(sec.empty)}</div>`
+            : `<div class="video-grid">${list.map(buildVideoCard).join("")}</div>`}
+        </div>
+      `;
+    });
+
+    html += `<div class="video-footnote">
+      📺 Buttons open YouTube searches and channels in a new tab — results show whatever was actually uploaded, including same-day livestreams if the organizer is streaming.
+      Coverage depends on the tournament: Monte Carlo, Nordic Open, and events streamed by Backgammon Galaxy are most reliable.
+    </div>`;
+
+    els.videosContainer.innerHTML = html;
+  }
+
+  function buildVideoCard(t) {
+    const year = new Date(t.startDate).getFullYear();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const start = new Date(t.startDate);
+    const end = new Date(t.endDate);
+    start.setHours(0, 0, 0, 0);
+    end.setHours(0, 0, 0, 0);
+    const isLive = today >= start && today <= end;
+
+    const searchUrl = "https://www.youtube.com/results?search_query=" +
+      encodeURIComponent(`${t.name} ${year} backgammon`);
+    const liveUrl = "https://www.youtube.com/results?search_query=" +
+      encodeURIComponent(`${t.name} ${year} live`) + "&sp=EgJAAQ%253D%253D"; // live filter
+    const todayUrl = "https://www.youtube.com/results?search_query=" +
+      encodeURIComponent(`${t.name} ${year}`) + "&sp=EgQIAxAB"; // uploaded today
+
+    return `
+      <div class="video-card ${isLive ? "live" : ""}">
+        <div class="video-card-title">${escapeHtml(t.name)}</div>
+        <div class="video-card-sub">${escapeHtml(t.city)}, ${escapeHtml(t.country)} • ${formatDateRange(t.startDate, t.endDate)}</div>
+        <div class="video-actions">
+          ${isLive
+            ? `<a class="primary" href="${escapeAttr(todayUrl)}" target="_blank" rel="noopener">▶ Today's uploads</a>
+               <a href="${escapeAttr(liveUrl)}" target="_blank" rel="noopener">🔴 Live streams</a>`
+            : `<a class="primary" href="${escapeAttr(searchUrl)}" target="_blank" rel="noopener">▶ Watch on YouTube</a>`}
+          <a href="${escapeAttr(t.website)}" target="_blank" rel="noopener">Official site</a>
+        </div>
+      </div>
+    `;
+  }
+
+  /* ---------- Tab switching ---------- */
+  function switchTab(tabName) {
+    els.tabs.forEach(t => {
+      const active = t.dataset.tab === tabName;
+      t.classList.toggle("active", active);
+      t.setAttribute("aria-selected", active);
+    });
+    els.tabPanels.forEach(p => {
+      p.classList.toggle("active", p.id === "tab-" + tabName);
+    });
+
+    if (tabName === "videos") {
+      renderVideos();
+    } else if (tabName === "tournaments" && map) {
+      // re-trigger map size calc since it was hidden
+      setTimeout(() => map.invalidateSize(), 50);
+    }
+  }
+
   /* ---------- Wire events ---------- */
   function wireEvents() {
     [els.search, els.region, els.country, els.month, els.format,
@@ -375,6 +491,10 @@
     });
 
     els.nearMeBtn.addEventListener("click", requestLocation);
+
+    els.tabs.forEach(tab => {
+      tab.addEventListener("click", () => switchTab(tab.dataset.tab));
+    });
 
     els.closeDetail.addEventListener("click", closeDetail);
     els.overlay.addEventListener("click", (e) => {
