@@ -454,8 +454,8 @@
         <div class="video-card-title">${escapeHtml(t.name)}</div>
         <div class="video-card-sub">${escapeHtml(t.city)}, ${escapeHtml(t.country)} • ${formatDateRange(t.startDate, t.endDate)}</div>
         <div class="video-actions">
-          ${watchButton(t.liveVideoId, liveQuery, "🔴 Watch live", t.name + " — live", true)}
-          ${isLive ? watchButton(null, todayQuery, "▶ Today's uploads", t.name + " — today", false) : ""}
+          ${watchButton(t.liveVideoId, null, liveQuery, "🔴 Watch live", t.name + " — live", true)}
+          ${isLive ? watchButton(null, null, todayQuery, "▶ Today's uploads", t.name + " — today", false) : ""}
           <a href="${escapeAttr(t.website)}" target="_blank" rel="noopener">Official site</a>
         </div>
       </div>
@@ -506,21 +506,23 @@
         <div class="video-card-title">${escapeHtml(t.name)}</div>
         <div class="video-card-sub">${escapeHtml(t.city)}, ${escapeHtml(t.country)} • ${formatDateRange(t.startDate, t.endDate)}</div>
         <div class="video-actions">
-          ${watchButton(t.featuredVideoId, yearQuery, "▶ Watch " + year, t.name + " " + year, true)}
-          ${watchButton(null, allQuery, "All editions", t.name + " — all editions", false)}
+          ${watchButton(t.featuredVideoId, t.featuredPlaylistId, yearQuery, "▶ Watch " + year, t.name + " " + year, true)}
+          ${watchButton(null, null, allQuery, "All editions", t.name + " — all editions", false)}
           <a href="${escapeAttr(t.website)}" target="_blank" rel="noopener">Official site</a>
         </div>
       </div>
     `;
   }
 
-  // Renders either a modal-play button (when a curated YouTube video ID is set)
-  // or a YouTube-search anchor that opens in a new tab.
-  function watchButton(videoId, searchQuery, label, title, primary) {
+  // Renders either a modal-play button (when a curated YouTube video or playlist
+  // ID is set on the tournament) or a YouTube-search anchor that opens in a new tab.
+  function watchButton(videoId, playlistId, searchQuery, label, title, primary) {
     const cls = primary ? "primary" : "";
-    if (videoId) {
+    if (videoId || playlistId) {
+      const vAttr = videoId ? `data-video-id="${escapeAttr(videoId)}"` : "";
+      const pAttr = playlistId ? `data-playlist-id="${escapeAttr(playlistId)}"` : "";
       return `<button type="button" class="play-btn ${cls}"
-        data-video-id="${escapeAttr(videoId)}"
+        ${vAttr} ${pAttr}
         data-title="${escapeAttr(title)}">${escapeHtml(label)}</button>`;
     }
     const url = "https://www.youtube.com/results?search_query=" + encodeURIComponent(searchQuery);
@@ -528,11 +530,17 @@
   }
 
   /* ---------- Video player modal ---------- */
-  // Only used when a curated YouTube video ID is available.
-  function openPlayer(videoId, title) {
-    els.playerIframe.src =
-      `https://www.youtube.com/embed/${encodeURIComponent(videoId)}?autoplay=1&rel=0`;
-    els.playerYtLink.href = `https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}`;
+  // Accepts either a video ID or a playlist ID. Whichever is set is used.
+  function openPlayer(videoId, playlistId, title) {
+    if (playlistId) {
+      els.playerIframe.src =
+        `https://www.youtube.com/embed/videoseries?list=${encodeURIComponent(playlistId)}&autoplay=1&rel=0`;
+      els.playerYtLink.href = `https://www.youtube.com/playlist?list=${encodeURIComponent(playlistId)}`;
+    } else {
+      els.playerIframe.src =
+        `https://www.youtube.com/embed/${encodeURIComponent(videoId)}?autoplay=1&rel=0`;
+      els.playerYtLink.href = `https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}`;
+    }
     els.playerTitle.textContent = title || "Now playing";
     els.playerOverlay.classList.remove("hidden");
     els.playerOverlay.setAttribute("aria-hidden", "false");
@@ -612,7 +620,7 @@
     document.addEventListener("click", (e) => {
       const btn = e.target.closest(".play-btn");
       if (!btn) return;
-      openPlayer(btn.dataset.videoId, btn.dataset.title);
+      openPlayer(btn.dataset.videoId, btn.dataset.playlistId, btn.dataset.title);
     });
   }
 

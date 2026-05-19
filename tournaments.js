@@ -2,9 +2,12 @@
 // IMPORTANT: Always verify dates, entry fees, and format on the official website before paying.
 // Data reflects typical/recurring annual events; specifics change each edition.
 //
-// To make the Videos tab "Watch" button play a specific embedded video instead of
-// opening YouTube search, add `featuredVideoId: "<youtube-video-id>"` to a tournament.
-// Example: a URL like https://www.youtube.com/watch?v=Ow_-WNcpLKo → featuredVideoId: "Ow_-WNcpLKo"
+// To make the Videos tab "Watch" button play an embedded video instead of opening
+// YouTube search, add one of these fields to a tournament:
+//   featuredVideoId: "<youtube-video-id>"     — plays a single video
+//   featuredPlaylistId: "<youtube-playlist-id>" — plays a full playlist
+// Example: https://www.youtube.com/watch?v=Ow_-WNcpLKo → featuredVideoId: "Ow_-WNcpLKo"
+// Example: https://www.youtube.com/playlist?list=PLA7Zca... → featuredPlaylistId: "PLA7Zca..."
 
 const TOURNAMENTS = [
   {
@@ -100,7 +103,8 @@ const TOURNAMENTS = [
     clockUsed: true,
     notes: "Federation-style event with national team competitions alongside open play.",
     website: "https://wbgf.info/",
-    languages: ["English"]
+    languages: ["English"],
+    featuredVideoId: "Kxgi4GjSyGU" // WBGF Team World Championship 2025
   },
   {
     id: "abt-chicago",
@@ -123,7 +127,8 @@ const TOURNAMENTS = [
     clockUsed: true,
     notes: "Part of the American Backgammon Tour. Friendly midwest crowd.",
     website: "https://usbgf.org/abt-american-backgammon-tour/",
-    languages: ["English"]
+    languages: ["English"],
+    featuredVideoId: "fAQWeB--Eq8" // 2024 Chicago Open FINALS Stream 1
   },
   {
     id: "abt-carolina",
@@ -169,7 +174,8 @@ const TOURNAMENTS = [
     clockUsed: true,
     notes: "Hosted by the Motor City Backgammon Club.",
     website: "https://motorcitybackgammon.com/",
-    languages: ["English"]
+    languages: ["English"],
+    featuredVideoId: "MLJIK2hz6eY" // 2024 Michigan Summer Backgammon Championship
   },
   {
     id: "abt-la",
@@ -192,7 +198,8 @@ const TOURNAMENTS = [
     clockUsed: true,
     notes: "Largest west-coast ABT stop. Held over Presidents Day weekend.",
     website: "https://www.labackgammon.com/",
-    languages: ["English"]
+    languages: ["English"],
+    featuredVideoId: "yMHL9shtLuQ" // Los Angeles Open 2024
   },
   {
     id: "abt-pittsburgh",
@@ -238,7 +245,8 @@ const TOURNAMENTS = [
     clockUsed: true,
     notes: "Held over the UK May bank holiday.",
     website: "https://ukbgf.com/",
-    languages: ["English"]
+    languages: ["English"],
+    featuredVideoId: "qconLgO2Zeo" // UKBGF Women's Championship FINAL 2025
   },
   {
     id: "german-open",
@@ -285,7 +293,8 @@ const TOURNAMENTS = [
     clockUsed: true,
     notes: "Casino venue requires age ID. Smart dress code.",
     website: "https://www.fiabg.it/",
-    languages: ["Italian", "English"]
+    languages: ["Italian", "English"],
+    featuredVideoId: "ockb-Su3_m0" // 6th Rimini Open CNB final - Sanna vs Tudose
   },
   {
     id: "greek-open",
@@ -426,7 +435,8 @@ const TOURNAMENTS = [
     clockUsed: true,
     notes: "Growing event with friendly community.",
     website: "https://www.kbgf.org/",
-    languages: ["Korean", "English"]
+    languages: ["Korean", "English"],
+    featuredPlaylistId: "PLA7ZcagI0frAZn0cO-XaamCIFlN9DDZAm" // Korea Open 2024 playlist
   },
   {
     id: "australian-open",
@@ -449,7 +459,8 @@ const TOURNAMENTS = [
     clockUsed: true,
     notes: "Australian Backgammon Federation's flagship event.",
     website: "https://www.backgammon.org.au/",
-    languages: ["English"]
+    languages: ["English"],
+    featuredPlaylistId: "PLRtZwZ6CFwtT_N5uTWlvQDktab6rU2pWO" // 2023 Australian Backgammon Championship Gold Coast playlist
   },
   {
     id: "israel-open",
@@ -519,7 +530,8 @@ const TOURNAMENTS = [
     clockUsed: true,
     notes: "Combines an ABT stop with massive side action.",
     website: "https://usbgf.org/abt-american-backgammon-tour/",
-    languages: ["English"]
+    languages: ["English"],
+    featuredVideoId: "jmf0wvEp64g" // 2023 U.S. Open Las Vegas FINALS Stream 1
   },
   {
     id: "boston-open",
@@ -565,7 +577,8 @@ const TOURNAMENTS = [
     clockUsed: true,
     notes: "Tristate area regulars; ABT stop.",
     website: "https://nybackgammon.com/",
-    languages: ["English"]
+    languages: ["English"],
+    featuredVideoId: "Kbz9l1d7dug" // NY Metropolitan Open ABT Online Final Day Stream
   },
   {
     id: "paris-open",
@@ -588,6 +601,7 @@ const TOURNAMENTS = [
     clockUsed: true,
     notes: "French Federation event; cercle (private club) venue.",
     website: "https://www.ffbg.fr/",
-    languages: ["French", "English"]
+    languages: ["French", "English"],
+    featuredVideoId: "F9nANXBZdJA" // Championnats de France de backgammon 2022 à Sèvres
   }
 ];
