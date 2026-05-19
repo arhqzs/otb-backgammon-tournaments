@@ -151,7 +151,8 @@ const TOURNAMENTS = [
     clockUsed: true,
     notes: "Long-running ABT stop with reliable turnout.",
     website: "https://usbgf.org/abt-american-backgammon-tour/",
-    languages: ["English"]
+    languages: ["English"],
+    featuredVideoId: "sgqel7L9i10" // Charlotte Backgammon Invitational
   },
   {
     id: "abt-michigan",
@@ -554,7 +555,8 @@ const TOURNAMENTS = [
     clockUsed: true,
     notes: "Run by Boston Backgammon club.",
     website: "https://www.bostonbackgammon.com/",
-    languages: ["English"]
+    languages: ["English"],
+    featuredVideoId: "xuJv9k31Acw" // 2025 Boston Open - Championship Div Main Rnds 4-5
   },
   {
     id: "newyork-open",
