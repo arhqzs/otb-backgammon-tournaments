@@ -76,7 +76,8 @@ const TOURNAMENTS = [
     clockUsed: true,
     notes: "All-inclusive resort event. Strong international field.",
     website: "https://merithotels.com/merit-open-backgammon/",
-    languages: ["English", "Turkish"]
+    languages: ["English", "Turkish"],
+    featuredVideoId: "2UIUviTH1ow" // 8th Merit Open - Burak Sarıkaş
   },
   {
     id: "pba-championships",
@@ -307,7 +308,8 @@ const TOURNAMENTS = [
     clockUsed: true,
     notes: "Backgammon ('tavli') is part of Greek culture — large casual turnout in side events.",
     website: "https://www.hellenicbackgammon.gr/",
-    languages: ["Greek", "English"]
+    languages: ["Greek", "English"],
+    featuredVideoId: "1bgOVGCHRIM" // 3rd Greek Grand Prix - Mochy vs Roland Sahlén
   },
   {
     id: "dutch-open",
@@ -353,7 +355,8 @@ const TOURNAMENTS = [
     clockUsed: true,
     notes: "Swedish federation event with strong Nordic attendance.",
     website: "https://www.svenskbackgammon.se/",
-    languages: ["Swedish", "English"]
+    languages: ["Swedish", "English"],
+    featuredVideoId: "8ZaEXIafNBA" // Swedish Galaxy Championship 2020 FINAL
   },
   {
     id: "czech-open",
@@ -399,7 +402,8 @@ const TOURNAMENTS = [
     clockUsed: true,
     notes: "JBL flagship event. Highly organized.",
     website: "https://backgammon.gr.jp/",
-    languages: ["Japanese", "English"]
+    languages: ["Japanese", "English"],
+    featuredVideoId: "tw-sM1wo5Vk" // Japan Open 2024 Final - Mochy vs Ryo Matsuura
   },
   {
     id: "korea-open",
@@ -468,7 +472,8 @@ const TOURNAMENTS = [
     clockUsed: true,
     notes: "Backgammon ('shesh-besh') has a huge casual following in Israel.",
     website: "https://www.backgammon.org.il/",
-    languages: ["Hebrew", "English"]
+    languages: ["Hebrew", "English"],
+    featuredVideoId: "LQtDj4MCS3Y" // Israel Backgammon Championship
   },
   {
     id: "rio-open",
