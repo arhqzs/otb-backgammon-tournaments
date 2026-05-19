@@ -24,6 +24,11 @@
     tabPanels: document.querySelectorAll(".tab-panel"),
     videosContainer: document.getElementById("videos-container"),
     livestreamsContainer: document.getElementById("livestreams-container"),
+    playerOverlay: document.getElementById("player-overlay"),
+    playerIframe: document.getElementById("player-iframe"),
+    playerTitle: document.getElementById("player-title"),
+    playerYtLink: document.getElementById("player-yt-link"),
+    closePlayer: document.getElementById("close-player"),
   };
 
   let userLocation = null;
@@ -441,18 +446,20 @@
     const end = new Date(t.endDate); end.setHours(0, 0, 0, 0);
     const isLive = today >= start && today <= end;
 
-    const liveUrl = "https://www.youtube.com/results?search_query=" +
-      encodeURIComponent(`${t.name} ${year} live`) + "&sp=EgJAAQ%253D%253D";
-    const todayUrl = "https://www.youtube.com/results?search_query=" +
-      encodeURIComponent(`${t.name} ${year}`) + "&sp=EgQIAxAB";
+    const liveQuery = `${t.name} ${year} live`;
+    const todayQuery = `${t.name} ${year}`;
 
     return `
       <div class="video-card ${isLive ? "live" : ""}">
         <div class="video-card-title">${escapeHtml(t.name)}</div>
         <div class="video-card-sub">${escapeHtml(t.city)}, ${escapeHtml(t.country)} • ${formatDateRange(t.startDate, t.endDate)}</div>
         <div class="video-actions">
-          <a class="primary" href="${escapeAttr(liveUrl)}" target="_blank" rel="noopener">🔴 Live streams</a>
-          ${isLive ? `<a href="${escapeAttr(todayUrl)}" target="_blank" rel="noopener">▶ Today's uploads</a>` : ""}
+          <button type="button" class="play-btn primary"
+            data-query="${escapeAttr(liveQuery)}"
+            data-title="${escapeAttr(t.name + " — live streams")}">🔴 Watch live</button>
+          ${isLive ? `<button type="button" class="play-btn"
+            data-query="${escapeAttr(todayQuery)}"
+            data-title="${escapeAttr(t.name + " — today's uploads")}">▶ Today's uploads</button>` : ""}
           <a href="${escapeAttr(t.website)}" target="_blank" rel="noopener">Official site</a>
         </div>
       </div>
@@ -495,22 +502,43 @@
 
   function buildVideoCard(t) {
     const year = new Date(t.startDate).getFullYear();
-    const searchUrl = "https://www.youtube.com/results?search_query=" +
-      encodeURIComponent(`${t.name} ${year} backgammon`);
-    const allYearsUrl = "https://www.youtube.com/results?search_query=" +
-      encodeURIComponent(`${t.name} backgammon`);
+    const yearQuery = `${t.name} ${year} backgammon`;
+    const allQuery = `${t.name} backgammon`;
 
     return `
       <div class="video-card">
         <div class="video-card-title">${escapeHtml(t.name)}</div>
         <div class="video-card-sub">${escapeHtml(t.city)}, ${escapeHtml(t.country)} • ${formatDateRange(t.startDate, t.endDate)}</div>
         <div class="video-actions">
-          <a class="primary" href="${escapeAttr(searchUrl)}" target="_blank" rel="noopener">▶ Watch ${year}</a>
-          <a href="${escapeAttr(allYearsUrl)}" target="_blank" rel="noopener">All editions</a>
+          <button type="button" class="play-btn primary"
+            data-query="${escapeAttr(yearQuery)}"
+            data-title="${escapeAttr(t.name + " " + year)}">▶ Watch ${year}</button>
+          <button type="button" class="play-btn"
+            data-query="${escapeAttr(allQuery)}"
+            data-title="${escapeAttr(t.name + " — all editions")}">All editions</button>
           <a href="${escapeAttr(t.website)}" target="_blank" rel="noopener">Official site</a>
         </div>
       </div>
     `;
+  }
+
+  /* ---------- Video player modal ---------- */
+  function openPlayer(query, title) {
+    const encoded = encodeURIComponent(query);
+    // YouTube's embed search URL plays the top result; autoplay=1 starts it on click.
+    els.playerIframe.src =
+      `https://www.youtube.com/embed?listType=search&list=${encoded}&autoplay=1&rel=0`;
+    els.playerYtLink.href = `https://www.youtube.com/results?search_query=${encoded}`;
+    els.playerTitle.textContent = title || "Now playing";
+    els.playerOverlay.classList.remove("hidden");
+    els.playerOverlay.setAttribute("aria-hidden", "false");
+  }
+
+  function closePlayer() {
+    els.playerOverlay.classList.add("hidden");
+    els.playerOverlay.setAttribute("aria-hidden", "true");
+    // unload iframe so video stops playing
+    els.playerIframe.src = "";
   }
 
   /* ---------- Tab switching ---------- */
@@ -564,7 +592,23 @@
       if (e.target === els.overlay) closeDetail();
     });
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") closeDetail();
+      if (e.key === "Escape") {
+        closeDetail();
+        closePlayer();
+      }
+    });
+
+    // Player modal
+    els.closePlayer.addEventListener("click", closePlayer);
+    els.playerOverlay.addEventListener("click", (e) => {
+      if (e.target === els.playerOverlay) closePlayer();
+    });
+
+    // Delegated handler for all .play-btn buttons (Videos + Livestreams tabs)
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest(".play-btn");
+      if (!btn) return;
+      openPlayer(btn.dataset.query, btn.dataset.title);
     });
   }
 

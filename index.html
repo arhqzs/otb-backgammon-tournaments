@@ -156,6 +156,23 @@
     </section>
   </main>
 
+  <div id="player-overlay" class="overlay hidden" aria-hidden="true">
+    <div class="player-panel" role="dialog" aria-modal="true" aria-labelledby="player-title">
+      <button id="close-player" class="close-btn" aria-label="Close">×</button>
+      <h2 id="player-title" class="player-title"></h2>
+      <div class="player-frame-wrap">
+        <iframe id="player-iframe" class="player-frame"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen></iframe>
+      </div>
+      <div class="player-actions">
+        <a id="player-yt-link" href="#" target="_blank" rel="noopener" class="btn primary">Open on YouTube</a>
+        <span class="player-hint">If the player doesn't load, the video may have embedding disabled — use "Open on YouTube" instead.</span>
+      </div>
+    </div>
+  </div>
+
   <div id="detail-overlay" class="overlay hidden" aria-hidden="true">
     <div class="detail-panel" role="dialog" aria-modal="true" aria-labelledby="detail-title">
       <button id="close-detail" class="close-btn" aria-label="Close">×</button>

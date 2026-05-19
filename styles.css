@@ -586,7 +586,8 @@ body {
   margin-top: 4px;
 }
 
-.video-actions a {
+.video-actions a,
+.video-actions .play-btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -599,19 +600,24 @@ body {
   background: #fff;
   color: var(--ink);
   transition: background 0.1s;
+  cursor: pointer;
+  font-family: inherit;
 }
 
-.video-actions a:hover {
+.video-actions a:hover,
+.video-actions .play-btn:hover {
   background: #f5efe0;
 }
 
-.video-actions a.primary {
+.video-actions a.primary,
+.video-actions .play-btn.primary {
   background: #ff0000;
   color: #fff;
   border-color: #ff0000;
 }
 
-.video-actions a.primary:hover {
+.video-actions a.primary:hover,
+.video-actions .play-btn.primary:hover {
   background: #cc0000;
 }
 
@@ -629,6 +635,69 @@ body {
   color: var(--ink-soft);
   border-top: 1px solid var(--border);
   margin-top: 16px;
+}
+
+/* ---------- Video player modal ---------- */
+.player-panel {
+  background: var(--ink);
+  color: #fff;
+  border-radius: var(--radius);
+  max-width: 960px;
+  width: 100%;
+  position: relative;
+  box-shadow: var(--shadow-lg);
+  padding: 18px;
+}
+
+.player-panel .close-btn {
+  color: #fff;
+  position: absolute;
+  top: 8px;
+  right: 12px;
+}
+
+.player-panel .close-btn:hover {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+}
+
+.player-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 32px 12px 0;
+  color: #fff;
+}
+
+.player-frame-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.player-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.player-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.player-hint {
+  font-size: 12px;
+  color: #b8a98e;
+  flex: 1;
+  min-width: 200px;
 }
 
 /* ---------- Map markers ---------- */
