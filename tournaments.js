@@ -1,6 +1,10 @@
 // Curated list of major OTB (Over The Board) backgammon tournaments.
 // IMPORTANT: Always verify dates, entry fees, and format on the official website before paying.
 // Data reflects typical/recurring annual events; specifics change each edition.
+//
+// To make the Videos tab "Watch" button play a specific embedded video instead of
+// opening YouTube search, add `featuredVideoId: "<youtube-video-id>"` to a tournament.
+// Example: a URL like https://www.youtube.com/watch?v=Ow_-WNcpLKo → featuredVideoId: "Ow_-WNcpLKo"
 
 const TOURNAMENTS = [
   {
@@ -24,7 +28,8 @@ const TOURNAMENTS = [
     clockUsed: true,
     notes: "Considered the most prestigious OTB event in the world. Hotel rooms book out months in advance.",
     website: "https://www.backgammon-montecarlo.com/",
-    languages: ["English", "French"]
+    languages: ["English", "French"],
+    featuredVideoId: "Ow_-WNcpLKo" // 2025 BGWC Final at Monte Carlo
   },
   {
     id: "nordic-open",
@@ -47,7 +52,8 @@ const TOURNAMENTS = [
     clockUsed: true,
     notes: "Largest Easter backgammon festival in Europe. Side events run continuously.",
     website: "https://www.backgammon.dk/nordicopen/",
-    languages: ["English", "Danish"]
+    languages: ["English", "Danish"],
+    featuredVideoId: "2DfQDW3jyUk" // 2025 Nordic Open Day 4 Grand Final
   },
   {
     id: "merit-open",
@@ -254,7 +260,8 @@ const TOURNAMENTS = [
     clockUsed: true,
     notes: "Run by the German Backgammon Federation (DBGV).",
     website: "https://www.backgammon-bund.de/",
-    languages: ["German", "English"]
+    languages: ["German", "English"],
+    featuredVideoId: "Wn5fzVCHojs" // 2024 Deutsche Backgammon Meisterschaft Main Final
   },
   {
     id: "italian-open",

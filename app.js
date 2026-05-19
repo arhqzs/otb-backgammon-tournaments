@@ -454,12 +454,8 @@
         <div class="video-card-title">${escapeHtml(t.name)}</div>
         <div class="video-card-sub">${escapeHtml(t.city)}, ${escapeHtml(t.country)} • ${formatDateRange(t.startDate, t.endDate)}</div>
         <div class="video-actions">
-          <button type="button" class="play-btn primary"
-            data-query="${escapeAttr(liveQuery)}"
-            data-title="${escapeAttr(t.name + " — live streams")}">🔴 Watch live</button>
-          ${isLive ? `<button type="button" class="play-btn"
-            data-query="${escapeAttr(todayQuery)}"
-            data-title="${escapeAttr(t.name + " — today's uploads")}">▶ Today's uploads</button>` : ""}
+          ${watchButton(t.liveVideoId, liveQuery, "🔴 Watch live", t.name + " — live", true)}
+          ${isLive ? watchButton(null, todayQuery, "▶ Today's uploads", t.name + " — today", false) : ""}
           <a href="${escapeAttr(t.website)}" target="_blank" rel="noopener">Official site</a>
         </div>
       </div>
@@ -510,25 +506,33 @@
         <div class="video-card-title">${escapeHtml(t.name)}</div>
         <div class="video-card-sub">${escapeHtml(t.city)}, ${escapeHtml(t.country)} • ${formatDateRange(t.startDate, t.endDate)}</div>
         <div class="video-actions">
-          <button type="button" class="play-btn primary"
-            data-query="${escapeAttr(yearQuery)}"
-            data-title="${escapeAttr(t.name + " " + year)}">▶ Watch ${year}</button>
-          <button type="button" class="play-btn"
-            data-query="${escapeAttr(allQuery)}"
-            data-title="${escapeAttr(t.name + " — all editions")}">All editions</button>
+          ${watchButton(t.featuredVideoId, yearQuery, "▶ Watch " + year, t.name + " " + year, true)}
+          ${watchButton(null, allQuery, "All editions", t.name + " — all editions", false)}
           <a href="${escapeAttr(t.website)}" target="_blank" rel="noopener">Official site</a>
         </div>
       </div>
     `;
   }
 
+  // Renders either a modal-play button (when a curated YouTube video ID is set)
+  // or a YouTube-search anchor that opens in a new tab.
+  function watchButton(videoId, searchQuery, label, title, primary) {
+    const cls = primary ? "primary" : "";
+    if (videoId) {
+      return `<button type="button" class="play-btn ${cls}"
+        data-video-id="${escapeAttr(videoId)}"
+        data-title="${escapeAttr(title)}">${escapeHtml(label)}</button>`;
+    }
+    const url = "https://www.youtube.com/results?search_query=" + encodeURIComponent(searchQuery);
+    return `<a class="${cls}" href="${escapeAttr(url)}" target="_blank" rel="noopener">${escapeHtml(label)}</a>`;
+  }
+
   /* ---------- Video player modal ---------- */
-  function openPlayer(query, title) {
-    const encoded = encodeURIComponent(query);
-    // YouTube's embed search URL plays the top result; autoplay=1 starts it on click.
+  // Only used when a curated YouTube video ID is available.
+  function openPlayer(videoId, title) {
     els.playerIframe.src =
-      `https://www.youtube.com/embed?listType=search&list=${encoded}&autoplay=1&rel=0`;
-    els.playerYtLink.href = `https://www.youtube.com/results?search_query=${encoded}`;
+      `https://www.youtube.com/embed/${encodeURIComponent(videoId)}?autoplay=1&rel=0`;
+    els.playerYtLink.href = `https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}`;
     els.playerTitle.textContent = title || "Now playing";
     els.playerOverlay.classList.remove("hidden");
     els.playerOverlay.setAttribute("aria-hidden", "false");
@@ -608,7 +612,7 @@
     document.addEventListener("click", (e) => {
       const btn = e.target.closest(".play-btn");
       if (!btn) return;
-      openPlayer(btn.dataset.query, btn.dataset.title);
+      openPlayer(btn.dataset.videoId, btn.dataset.title);
     });
   }
 
